@@ -141,5 +141,62 @@ failed-protoganist-names ;calling the function defined above
 ;; and use a vector everywhere else
 
 ;; sets are collections of unique values
-# {"jay sivakumaran" 22 :bananas}
+#{"jay sivakumaran" 22 :bananas}
 
+(hash-set 1 1 2 2 ) ;stores #{1 2} only stores each value once
+
+(conj #{:a :b} :b) ;conj in this case doesn't add anything to the hash-set since :b already exists within it
+
+(set [3 3 3 4 4 5]) ; creating a set using the set function and a vector
+
+;; contains? vs keyword vs get
+(contains? #{:a :b} :a) ;returns true
+(contains? #{:a :b} :3) ;returns false
+(contains? #{nil}) nil ;returns true
+
+;using a keyword
+(:a #{:a :b}) ; returns :a
+
+;using get
+(get #{:a :b} :a) ;returns :a
+(get #{:a nil} nil) ;returns nil
+(get #{:a :b} "jay sivakumaran") ;returns nil
+
+;contains? is better than get when testing specifically for membership
+
+;basic clojure philosophy - it's better to have 99 functions operate on one data structure than 9 functions on 9 data structures
+
+;now it's time to learn about functions - calling functions - defining functions - anonymous functions - returning functions
+
+;calling functions
+(+ 1 2 3 4) ;returns 10
+(* 1 2 3 4) ;returns 24
+(first [1 2 3 4]) ;returns 1
+
+;all clojure operations have the same structure - opening parenthesis, operator, operands, closing parenthesis
+(or + -) ;or returns the first truthy value so it returns plus which is the function of plus
+((or + -) 1 2 3) ;returns 6 - because the first expression returns the plus operator which then operates on the other operands (the numbers)
+((and (= 1 1) +) 1 2 3) ;returns 6 because and retuns the first falsey value or the last truthy value hence the + is returned
+
+;the following are not valid function calls
+(1 2 3 4) ;because numbers aren't functions you\ll get a java exception
+("test" 1 2 3) ; because string is not a valid operand
+
+;higher order functions can take functions as an argument or return a function
+(inc 1.1) ; returns 2.1
+(map inc [0 1 2 3]) ;this is map the function not the data structure
+
+;; function calls - macro calls - special forms (definitions and if expressions)
+(if good-mood
+  (tweet walking-on-sunshine-lyrics)
+  (tweet mopey-country-song-lyrics))
+
+;; clojure can't evaluate both the if clause and the else clause as it normally would with functions because if shoud be one or the other hence why it is a special form - good thing about clojure is that there aren't very many special forms
+
+;;defining  functions - defn + function name + a docstring describing the function (optional) + parameters listed in brackets + function body
+(defn too-enthusiastic
+  "Return a cheer that might be a bit too enthusiastic"
+  [name]
+  (str "OH MY. God. " name " YOU are most definitely like the best"))
+
+(too-enthusiastic "Link")
