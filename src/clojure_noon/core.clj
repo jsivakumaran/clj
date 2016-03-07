@@ -200,3 +200,57 @@ failed-protoganist-names ;calling the function defined above
   (str "OH MY. God. " name " YOU are most definitely like the best"))
 
 (too-enthusiastic "Link")
+
+;; functions with multiple arities
+(defn no-params
+  []
+  "I take no parameters!")
+(defn one-param
+  [x]
+  (str "I take one parameter: " x))
+(defn two-params
+  [x y]
+  (str "Two parameters! I will smoosh them " x y)) ;two-arity function
+
+;; functions also support arity overloading - different function body will run depending on the number of parameters passed in
+(defn multi-arity
+  ;; 3 arity arguments and body
+  ([first-arg second-arg third-arg]
+   (do-things first-arg second-arg third-arg))
+  ;; 2-arity arguments and body
+  ([first-arg second-arg]
+   (do-things first-arg second-arg))
+  ;; 1-arity argument and body
+  ([first-arg]
+   (do-things first-arg)))
+
+(defn x-chop
+  "Describe the kind of chop you're inflicting on someone"
+  ([name chop-type]
+   (str "I " chop-type " chop " name "! Take That!"))
+  ([name]
+   (x-chop name "karate")))
+
+(x-chop "myself" "chop")
+
+(x-chop "yourself") ;function supplies a default of karate in case that the function is called with just one argument
+
+(defn senior-comm
+  [youngn]
+  (str "Get off my lawn, " youngn "!!"))
+
+(defn senior
+  [& youngns]
+  (map senior-comm youngns))
+
+(senior "Billy" "Joel" "Jay") ; one function calls another
+
+(defn favourite-things
+  [name & things]
+  (str "Hi, " name ", here are some of my favourite things: "
+       (clojure.string/join ", " things)))
+
+(favourite-things "shoes" "learning" "travel" "hackathons")
+
+;;now onto restructuring
+
