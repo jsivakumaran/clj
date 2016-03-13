@@ -254,3 +254,20 @@ failed-protoganist-names ;calling the function defined above
 
 ;;now onto restructuring
 
+(defn my-first 
+  [[first-thing]]
+  first-thing)
+
+(my-first ["oven" "bike" "war-axe"])
+
+(defn chooser
+  [[first-choice second-choice & unimportant-choices]]
+  (println (str "Your first choice is " first-choice))
+  (println (str "Your second choice is " second-choice))
+  (println (str "We're ignore the rest of your choices. "
+                "Here they are in case you need to cry over them. "
+                (clojure.string/join ", " unimportant-choices))))
+
+(chooser ["pi", "arduino", "beagle-bone", "esp2866"])
+
+
