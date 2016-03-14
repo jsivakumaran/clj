@@ -1,6 +1,7 @@
 (ns clojure-noon.core
   (:gen-class))
 
+(require '[clojure.string :as str])
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
@@ -266,8 +267,47 @@ failed-protoganist-names ;calling the function defined above
   (println (str "Your second choice is " second-choice))
   (println (str "We're ignore the rest of your choices. "
                 "Here they are in case you need to cry over them. "
-                (clojure.string/join ", " unimportant-choices))))
+                (str/join ", " unimportant-choices)))) 
 
 (chooser ["pi", "arduino", "beagle-bone", "esp2866"])
 
+
+(defn announce-treasure-location
+  [{lat :lat lng :lng}]
+  (println (str "treasure lat " lat))
+  (println (str "treasure lng " lng)))
+
+(announce-treasure-location {:lat 213.123 :lng 722.22}) 
+
+(defn receive-treasure-location
+  [{:keys [lat lng]}]
+  (println (str "Treasure lat " lat))
+  (println (str "Treasure lng " lng)))
+
+;;clojure returns the last form automatically
+(defn illustrative-function
+  []
+  (+ 1 23)
+  30
+  "jay")
+
+(illustrative-function)
+
+(defn number-comment
+  [x]
+  (if (> x 7)
+    "what a huuuuge number"
+    "not so big"))
+
+(number-comment 4)
+(number-comment 9)
+
+;;anonymous functions
+(fn [param-list]
+  function body)
+
+(map (fn [name] (str "hi, " name))
+     ["Darth Vader" "Joker"])
+
+((fn [c] (* c 3)) 8)
 
