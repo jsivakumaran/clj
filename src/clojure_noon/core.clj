@@ -1,4 +1,4 @@
-(ns clojure-noon.core
+(ns clojure-noob.core
   (:gen-class))
 
 (require '[clojure.string :as str])
@@ -152,8 +152,6 @@ failed-protoganist-names ;calling the function defined above
 
 ;; contains? vs keyword vs get
 (contains? #{:a :b} :a) ;returns true
-(contains? #{:a :b} :3) ;returns false
-(contains? #{nil}) nil ;returns true
 
 ;using a keyword
 (:a #{:a :b}) ; returns :a
@@ -503,6 +501,22 @@ failed-protoganist-names ;calling the function defined above
 
 (def dec3 (dec-maker 3))
 (dec3 8)
+
+
+;;chapter 4
+;;programming to abstractions - key concept in clojure
+
+;;a sequence is a collection of elements organized in linear order
+
+(defn titleize
+  [topic]
+  (str topic "for the Brave and True"))
+
+(map titleize ["Hamsters" "Puppies"]) ;map works with a vector
+(map titleize '("Empathy" "Hatred")) ;map works with a list
+(map titleize #{"Elbows" "Decorating"}) ;map works with unsorted sets
+
+;;first, rest, and cons is all you need to create the maps
 
 
 
