@@ -392,3 +392,117 @@ failed-protoganist-names ;calling the function defined above
 (let [[pongo & dalmations] dalmation-list]
   [pongo dalmations])
 
+(into final-body-parts 
+      (set [part (matching-part part)]))
+
+(into [] (set [:a :a]))
+
+;let is a handy way to introduce local names for values which simpliefies the code
+
+(loop [iteration 0]
+  (println (str "Iteration " iteration))
+  (if (> iteration 3)
+    (println "Goodbye!")
+    (recur (inc iteration))))
+
+;the loop above and the function below are equivalent but loop is less verbose
+(defn recursive-printer
+  ([]
+   (recursive-printer 0))
+  ([iteration]
+   (println iteration)
+   (if (> iteration 3)
+     (println "Goodbye!")
+     (recursive-printer (inc iteration)))))
+
+(recursive-printer)
+
+#"regular-expression"
+(re-find #"^left-" "left-eye")
+(re-find #"^left-" "cleft-chin")
+(re-find #"^left-" "wongleblart")
+
+;re-find I assume stands for regular-expression find
+
+(defn matching-part
+  [part]
+  {:name (clojure.string/replace (:name part) #"^left-" "right-")
+   :size (:size part)})
+
+(matching-part {:name "left-eye" :size 1})
+
+(matching-part {:name "head" :size 3})
+
+;;better symmetrizer with reduce
+(reduce + [1 2 3 4])
+
+;;it is equivalent to this
+(+ (+ (+ 1 2) 3) 4)
+
+;reduce can also take an initial value
+(reduce + 15 [1 2 3 4]) ;;here the initial value is 15
+
+;;reduce is usually used to consilidate a bunch of values into 1 value like it is done above
+;;but reduce can also be used to take a bunch of values and turn them into a larger set of values
+;;one way of implementing the reduce function
+(defn my-reduce
+  ([f initial collection]
+   (loop [result initial
+          remaining collection]
+     (if (empty? remaining)
+       result
+       (recur (f result (first remaining)) (rest remaining)))))
+  ([f [head & tail]]
+   (my-reduce f head tail)))
+
+(defn better-symmetrize-body-parts
+  "expects a seq of maps that have a :name and :size"
+  [asym-body-parts]
+  (reduce (fn [final-body-parts part]
+            (into final-body-parts (set [part (matching-part part)])))
+          []
+          asym-body-parts))
+
+(defn hit
+  [asym-body-parts]
+  (let [sym-parts (better-symmetrize-body-parts asym-body-parts)
+        body-part-size-sum (reduce + (map :size sym-parts))
+        target (rand body-part-size-sum)]
+    (loop [[part & remaining] sym-parts
+           accumulated-size (:size part)]
+      (if (> accumulated-size target)
+        part
+        (recur remaining (+ accumulated-size (:size (first remaining))))))))
+ 
+(hit asym-hobbit-body-parts)
+
+;;exercises - chapter 3
+;1. use the str, vector, list, hash-map and hash-set functions.
+(prn-str "hello world")
+(str "hello world")
+(vector) ;creates an empty vector []
+[1 2 3] ;creates a vector with 1 2 3
+() ; empty list ()
+(1 2 3 4) ;list with 1 2 3 4
+(hash-map) ;empty hash-map {}
+{:key1 1 :key2 2} ;two keys and two values
+(hash-set) ; empty hash-set #{}
+#{1 2 3} ;hash-set can only have values 
+
+;;2. write a function that takes a number and adds 100 to it
+(defn add-hundred
+  [num]
+  (+ num 100))
+(add-hundred 1)
+
+;;3. Write a function dec-maker, that works exactly like the function inc-maker except with subtraction
+(defn dec-maker
+  "Create a custom decrementer"
+  [dec-by]
+  #(- % dec-by))
+
+(def dec3 (dec-maker 3))
+(dec3 8)
+
+
+
