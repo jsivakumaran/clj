@@ -518,5 +518,52 @@ failed-protoganist-names ;calling the function defined above
 
 ;;first, rest, and cons is all you need to create the maps
 
+(seq '(1 2 3))
+(seq [1 2 3])
+(seq #{1 2 3}) ;sequences always return a list
+(seq {:name "Bill Compton" :occupation "Dead Mopey Guy"}) ; a sequence of a map consists of two-element key-value vectors
 
+;;into will convert the seq into a map
+(into {} (seq {:a 1 :b 2 :c 3}))
 
+;;As long as a data structure implements first, rest, cons - it can use a whole host of functions including
+;;reduce filter etc.
+
+;;maps
+(map inc [1 2 3]) ; map on a single collection
+(map str ["a" "b" "c"] ["A" "B" "C"]) ;returns a list ("aA" "bB" "cC") - this is a map on multiple collections
+
+                                        ;this is the same as above but more verbose
+(list (str "a" "A") (str "b" "B") (str "c" "C"))
+
+;;unify-diet-data
+(def human-consumption [7.1 2.3 5.5 6.6])
+(def critter-consumption [0.1 0.2 0.3 0.4])
+(defn unify-diet-data
+  [human critter]
+  {:human human
+   :critter critter})
+
+(map unify-diet-data human-consumption critter-consumption)
+
+;;now onto a little bit of statistics
+(def sum #(reduce + %))
+(def avg #(/ (sum %) (count %)))
+(defn stats
+  [numbers]
+  (map #(% numbers) [sum count avg])) ;stats function iterates over a vector of functions, applying each function numbers!
+
+(stats [3 4 10])
+
+(stats [80 1 33 5])
+
+(def identities
+  [{:alias "Batman" :real "Bruce Wayne"}
+   {:alias "Spiderman" :real "Peter Parker"}
+   {:alias "Santa" :real "Your Mom"}
+   {:alias "Easter Bunny" :real "Your Dad"}])
+
+(map :real identities)
+(map :alias identities)
+
+;;reduce
