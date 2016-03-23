@@ -567,3 +567,41 @@ failed-protoganist-names ;calling the function defined above
 (map :alias identities)
 
 ;;reduce
+(reduce (fn [new-map [key val]]
+          (assoc new-map key (inc val)))
+        {}
+        {:max 30 :min 10})
+
+                                        reduce can be used to transform a map's values
+
+(reduce (fn [new-map [key val]]
+          (if (> val 4)
+            (assoc new-map key val)
+            new-map))
+        {}
+        {:human 3.1
+         :critter 3.9})
+
+;; take, drop, take-while and drop-while
+;;take and drop take two arguments : a number and a sequence
+(take 3 [1 2 3 4 5 6 7 8 9 10])
+(drop 3 [1 2 3 4 5 6 7 8 9 10])
+
+(def food-journal
+  [{:month 1 :day 1 :human 3.4 :critter 2.3}
+   {:month 1 :day 2 :human 3.4 :critter 2.3}
+   {:month 1 :day 3 :human 3.4 :critter 2.3}
+   {:month 1 :day 4 :human 3.4 :critter 2.3}
+   {:month 1 :day 7 :human 3.4 :critter 2.3}
+   {:month 1 :day 8 :human 3.4 :critter 2.3}
+   {:month 1 :day 9 :human 3.4 :critter 2.3}
+   {:month 2 :day 2 :human 3.4 :critter 2.3}])
+
+(take-while #(< (:month %) 3) food-journal)
+(drop-while #(< (:month %) 4) food-journal)
+;;now combine the two
+(take-while #(< (:month %) 4)
+            (drop-while #(< (:month %) 2) food-journal))
+
+;;filter and some
+
