@@ -1,4 +1,4 @@
-(ns clojure-noob.core
+(ns clojurenoob.core
   (:gen-class))
 
 (require '[clojure.string :as str])
@@ -605,3 +605,58 @@ failed-protoganist-names ;calling the function defined above
 
 ;;filter and some
 
+(filter #(< (:human %) 5) food-journal)
+
+;;and if you were thinking that you could do the same thing as take-while and drop-while with filter - you would be correct
+;;except that take-while and drop-while can be more efficient and faster in certain scenarios so they are good to know
+
+(filter #(< (:month %) 3) food-journal)
+
+;;let's get some
+(some #(> (:critter %) 5) food-journal) ;nil
+(some #(> (:critter %) 2) food-journal) ; true
+                                        ;some returns the first truthy value
+
+(some #(and (> (:critter %) 2) %) food-journal) ; returns the first truthy value
+
+                                        ;sort and sort-by
+(sort [3 2 1]) ;(1 2 3) - notice that sort returns a list while a vector was passed in
+
+(sort-by count ["aaa" "c" "bb"]) ; ("c" "bb" "aaa")
+(concat [1 2] [3 4]) ; (1 2 3 4) - just appends them together into a list
+
+;;lazy seqs
+(def vampire-database
+  {0 {:makes-bloody-puns? false, :has-pulse? true :name "McStein"}
+   1 {:makes-bloody-puns? false, :has-pulse? true :name "Neamonate"}
+   2 {:makes-bloody-puns? false, :has-pulse? true :name "Randomator"}
+   3 {:makes-bloody-puns? true, :has-pulse? true :name "Damon Salvatore"}
+   4 {:makes-bloody-puns? true, :has-pulse? true :name "Berry"}
+   })
+
+(defn vampire-related-details
+  [social-security-number]
+  (Thread/sleep 1000)
+  (get vampire-database social-security-number))
+
+(defn vampire?
+  [record]
+  (and (:makes-bloody-puns? record)
+       (not (:has-pulse? record))
+       record))
+
+(defn identify-vampire
+  [social-security-numbers]
+  (first (filter vampire?
+                 (map vampire-related-details social-security-numbers))))
+
+(time (vampire-related-details 0))
+
+(time (def mapped-details (map vampire-related-details (range 0 1000000))))
+
+(time (first mapped-details))
+
+(time (identify-vampire (range 0 1000000)))
+
+;;Infinite sequences
+(concat (take 8 (repeat "na")) ["Batman!"])
