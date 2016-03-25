@@ -36,3 +36,8 @@
 
 (first (mapify (parse (slurp filename))))
 
+(defn glitter-filter
+  [minimum-glitter records]
+  apply conj () (filter #(>= (:glitter-index %) minimum-glitter) records))
+
+(glitter-filter 3 (mapify (parse (slurp filename))))

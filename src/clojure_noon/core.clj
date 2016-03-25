@@ -800,15 +800,44 @@ failed-protoganist-names ;calling the function defined above
 
 ;;complement does one little thing well.
 
+;; Chapter 5 - Pure Functions - what and why
+;;all the functions used up till now have been pure except for println and rand
+
+;;it is a pure function if 1. it always returns the same result if given the same arguments 2. It can't cause side effects.
+
+;;pure functions are referentially transparent i.e. same arguments returns the same result
+(+ 1 2) ;+ always returns 3 if inputs are 1 and 2
+(defn wisdom
+  [words]
+  (str words ", Daniel-san")) ;; also referentially transparent
+
+(wisdom "Always bathe on Fridays") 
+
+(defn year-end-evaluation
+  []
+  (if (> (rand) 0.5)
+    "You get a raise!"
+    "Better luck next year!")) ;;not referentially transparent - because of the random value injected into the functions
+
+(defn analyze-file
+  [filename]
+  (analysis (slurp filename))) ;;not referentially transparent because the file contents can change even if the filename doesn't
+
+(defn analysis
+  [text]
+  (str "Character count: " (count text))) ; referentially transparent
 
 
+;;Immutable Data Structures
+;;immutable data structures ensure that your code won't have side effects
 
+;;recursion instead of for/while
 
+(defn sum ;; two-arity function
+  ([vals] (sum vals 0)) ;; provide default value of 0 - first arity is just [vals]
+  ([vals accumulating-total] ;; second varity is [vals accumulating-total] - so this function can handle one input or two inputs
+   (if (empty? vals)
+     accumulating-total
+     (sum (rest vals) (+ (first vals) accumulating-total)))))
 
-
-
-
-
-
-
-
+(sum [28 38 29])
