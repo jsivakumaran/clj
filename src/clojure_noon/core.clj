@@ -696,3 +696,119 @@ failed-protoganist-names ;calling the function defined above
 (into #{} (map identity [:garlic-clove :garlic-clove])) ; #{:garlic-clove} only one :garlic-clove since it is a set - into #{}
 
 ;;all the above examples have been with the first value as empty into into but it doesn't have to be
+(into {:favorite-emotion "gloomy"} [[:sunlight-reaction "Glitter!"]]) ; {:favorite-emotion "gloomy" :sunlight-reaction "Glitter!"}
+(into ["cherry"] '("pine" "spruce")) ;["cherry" "pine" "spruce"]
+
+;;and while the above shows two different empty-types converting into the first data-type, they can be both the same data-type
+(into {:favorite-animal "kitty"} {:least-favorite-smell "dog" :relationship-with-teenager "creepy"}) ;both arguments passed in are maps
+
+;;takes two collections and adding all the elements from the second into the first
+
+;;conj
+;;conj also adds elements to a collection but does it in a slightly different way
+(conj [0] [1]); [0 [1]]  -not what you expected huh?
+(into [0] [1]); [0 1] - compare into with conj to better elucidate the differences
+
+;;if you wanted the same behavior of into but using conj as above then
+(conj [0] 1) ;; [0 1]  ;;with into both arguments must be collections whereas with conj only the first argument must behavior
+
+(conj [0] 1 2 3 4) ;;[0 1 2 3 4] can accept a tonne of arguments
+
+;;conj and into are so similar that you can even define conj in terms of into
+(defn my-conj
+  [target & additions]
+  (into target additions))
+
+(my-conj [0] 1 2 3) ; [0 1 2 3] behaves just like conj but created using into
+
+;;Function Functions
+;; learning to accept functions as arguments and return functions as values takes some getting used tonne
+;; two such functions are apply and partial
+
+;;apply explodes a seqable data structure so it can be passed to a function that expects a rest parameter
+(max 0 2 4 5 3) ; 5 - takes a number of arguments and returns the greatest of all arguments
+(max [0 1 2]) ; [0 1 2] - here you are passing in a single argument of a vector, you want to pass in the contents of the vector as arguments
+
+;;apply is perfect for this usage
+(apply max [0 1 2]) ; returns 2
+
+;; apply is often used like this, exploding the elements of a collection so that they get passed to a function as separate arguments
+;; you can define into in terms of conj by using apply
+(defn my-into
+  [target additions]
+  (apply conj target additions)) ;;apply explodes whatever is passed into additions so they are passed in as exploded arguments
+
+(my-into [0] [1 2 3])  ;; equivalent of calling (conj [0] 1 2 3)
+
+;;partial
+;;partial takes a function and a number of arguments - then returns a new function - when you call the returned function, it calls the original function with the original arguments you supplied along with the new arguments
+
+(def add10 (partial + 10))
+(add10 3) ; 13 - when you call add10 it calls the original function and arguments +10 and tacks on whatever arguments you call add10 with such as 3 in this case and 5 in the case below
+(add10 5) ; 15
+
+(def add-missing-elements
+  (partial conj ["water" "earth" "air"]))
+
+(add-missing-elements "unobtanium" "adamantium") ;["water" "earth" "air" "unobtanium" "adamantium"]
+
+;;writing your own partial
+(defn my-partial
+  [partialized-fn & args]
+  (fn [& more-args]
+    (apply partialized-fn (into args more-args))))
+
+(def add20 (my-partial + 20))
+(add20 3) ;23
+
+;;the anonymous function returned by add20 is defined as below
+(fn [& more-args]
+  (apply + (into [20] more-args)))
+
+;;here's a toy example of how you could use partial to specialize a logger creating a warn function
+(defn lousy-logger
+  [log-level message]
+  (condp = log-level
+    :warn (clojure.string/lower-case message)
+    :emergency (clojure.string/upper-case message)))
+
+(def warn (partial lousy-logger :warn))
+
+(warn "Red light ahead") ; "red light ahead" ;;calling (warn "Red light ahead") is identical to calling (lousy-logger :warn "Red light ahead")
+
+;;complement
+(defn identify-humans
+  [social-security-numbers]
+  (filter #(not (vampire? %))
+          (map vampire-related-details social-security-numbers))) ;; #(not (vampire? %)) is so common that there's a function for it called complement
+
+(defn not-vampire? (complement vampire?))
+(defn identify-humans
+  [social-security-numbers]
+  (filter not-vampire?
+          (map vampire-related-details social-security-numbers)))
+
+;;your own complement
+(defn my-complement
+  [fun]
+  (fn [& args]
+    (not (apply fun args))))
+
+(def my-pos (complement neg?))
+(my-pos 1) ;;true
+(my-pos -1) ;;false
+
+;;complement does one little thing well.
+
+
+
+
+
+
+
+
+
+
+
+
+
