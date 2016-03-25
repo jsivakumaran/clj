@@ -665,3 +665,34 @@ failed-protoganist-names ;calling the function defined above
 (defn even-numbers
   ([] (even-numbers 0))
   ([n] (cons n (lazy-seq (even-numbers (+ n 2))))))
+
+(take 10 (even-numbers))  ;;mind-bending due to the recursion
+
+;;remember what cons does
+(cons 0 '(2 4 6)) ; (0 2 4 6) cons appends a value to a list and returns a list
+
+;;The Collection Abstraction
+;; as opposed to the sequence abstraction - which was covered earlier in the chapter
+;; all of clojure's core data structures (vectors, maps, lists and sets) take part in both collection and sequence abstraction
+;;collection abstraction is about the data structure as a whole (i.e. count, empty?, every?) apply to the whole collection
+;; and not to an individual element like they would in the sequence abstraction
+
+(empty? []) ;;true
+(empty? ["no!"]) ;;false
+
+;;into and conj - very similar
+
+(map identity {:sunlight-reaction "Glitter!"}) ;returns a vector ([:sunlight-reaction "Glitter!"])
+;;if you want it to return a map then use into to convert it back into a map like below
+(into {} (map identity {:sunlight-reaction "Glitter!"})) ; returns a map {:sunlight-reaction "Glitter!"}
+
+;;into will work with other data structures as well
+(map identity [:garlic :sesame-oil :fried-eggs]) ;(:garlic :sesame-oil :fried-eggs)
+;; to get back a vector like the vector you sent in do the following
+(into [] (map identity [:garlic :sesame-oil :fried-eggs])) ; [:garlic :sesame-oil :fried-eggs]
+
+;;now map converts vector with identical entries into a list and we use into to stick values into a set
+(map identity [:garlic-clove :garlic-clove]) ; (:garlic-clove :garlic-clove)
+(into #{} (map identity [:garlic-clove :garlic-clove])) ; #{:garlic-clove} only one :garlic-clove since it is a set - into #{}
+
+;;all the above examples have been with the first value as empty into into but it doesn't have to be
