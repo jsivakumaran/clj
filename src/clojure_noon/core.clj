@@ -659,4 +659,9 @@ failed-protoganist-names ;calling the function defined above
 (time (identify-vampire (range 0 1000000)))
 
 ;;Infinite sequences
-(concat (take 8 (repeat "na")) ["Batman!"])
+(concat (take 8 (repeat "na")) ["Batman!"]) ;; that repeat "na" is an infinite series of "na"s
+(take 3 (repeatedly (fn [] (rand-int 10)))) ;; repeatedly call a function that returns a random integer from 0 10 and then take 3 of those numbers
+
+(defn even-numbers
+  ([] (even-numbers 0))
+  ([n] (cons n (lazy-seq (even-numbers (+ n 2))))))
