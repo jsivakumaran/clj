@@ -836,8 +836,41 @@ failed-protoganist-names ;calling the function defined above
 (defn sum ;; two-arity function
   ([vals] (sum vals 0)) ;; provide default value of 0 - first arity is just [vals]
   ([vals accumulating-total] ;; second varity is [vals accumulating-total] - so this function can handle one input or two inputs
-   (if (empty? vals)
-     accumulating-total
-     (sum (rest vals) (+ (first vals) accumulating-total)))))
+   (if (empty? vals) ;; if vals is empty all the numbers have been processed so return accumulating-total
+     accumulating-total ;;return accumulating-total
+     (sum (rest vals) (+ (first vals) accumulating-total))))) ;; (rest vals) so send the rest of the values to sum and add the first of vals to the accumulating-total (+ (first vals) accumulating-total) - + add here is only taking in two values 
 
-(sum [28 38 29])
+(sum [28 38 29]) ; single-arity body calls two-arity body
+(sum [28 38 29] 0)
+(sum [38 29] 28)
+(sum [29] 66)
+(sum [] 95); base case is reached - i.e. vals is empty and so returns 95
+
+;;each recursive call to sum creates a new scope where vals and accumulating-total are bound to different values, all without needing to alter the values originally passed to the function or perform any internal mutation
+
+;;generally use recur when doing recursion for performance reasons
+;;here's how you would do sum with recur
+(defn sum
+  ([vals]
+   (sum vals 0))
+  ([vals accumulating-total]
+   (if (empty? vals)
+   accumulating-total
+   (recur (rest vals) (+ (first vals) accumulating-total)))))
+
+(sum [19 10])
+
+;;Function Composition Instead of Attribute Mutation
+(require '[clojure.string :as s]) ;;this require allows us to access the string function library
+(defn clean
+  [text]
+  (s/replace (s/trim text) #"lol" "LOL"))
+
+(clean "My constrictor is so sassy lol!    ") ; "My constrictor is so sassy LOL!"
+
+;; the above does not require any mutation - the clean function passes an immutable value text to a pure function s/trim, which returns an immutable value with the spaces of the string being trimmed and then the value is then passed to the pure function s/replace which returns another immutable value.
+
+;;combining values like this is called function composition
+;;recursion uses function composition - instead of passing it to a different function as above, it passes it to itself
+
+
