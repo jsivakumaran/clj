@@ -874,3 +874,54 @@ failed-protoganist-names ;calling the function defined above
 ;;recursion uses function composition - instead of passing it to a different function as above, it passes it to itself
 
 
+;;Pure Functions
+;; You have already seen one function partial that creates new functions
+;; comp and memoize also creates new functions which rely on referential transparency, immutability or both
+
+;;comp - for creating a new function from the composition of any number of functions - because composing functions is so common in clojure that it has it's own function - comp
+
+((comp inc *) 2 3) ; 7 => 2*3 + 1
+
+;;another example of using comp
+(def character
+  {:name "Smooches McCutes"
+   :attributes {:intelligence 10
+                :strength 4
+                :dexterity 5}})
+
+(def c-int (comp :intelligence :attributes))
+(def c-str (comp :strength :attributes))
+(def c-dex (comp :dexterity :attributes))
+
+(c-int character) ; 10
+(c-str character) ; 4
+(c-dex character) ; 5
+
+;; equivalent of using comp above
+(defn c-str-without-comp [c] (:strength (:attributes c)))
+(c-str-without-comp character) ;4
+;;but as you can tell it's a little longer and less readable
+
+;;when you see comp you immediately know the resulting function's purpose is to combine existing functions in a well-known way
+;;what if one of the functions you want to compose needs to take more than one argument?
+;;A: wrap it in an anonymous function
+
+(defn spell-slots
+  [char]
+  (int (inc (/ (c-int char) 2))))
+
+;;now using comp
+(def spell-slots-comp (comp int inc #(/ % 2) c-int)) ;; to divide by two all you need to do was wrap the division in an anonymous functions
+;;#(/ % 2) - anonymous function that divides an input by 2
+
+(defn two-comp
+  [f g]
+  (fn [& args]
+    (f (apply g args))))
+
+
+
+
+
+
+
