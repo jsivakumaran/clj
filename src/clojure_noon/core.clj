@@ -919,6 +919,21 @@ failed-protoganist-names ;calling the function defined above
   (fn [& args]
     (f (apply g args))))
 
+;;memoize - kind of like cacheing to get better performance out of calls to referentially transparent functions like the one below
+(defn sleepy-identity
+  "Returns the given value after 1 second"
+  [x]
+  (Thread/sleep 1000)
+  x)
+
+(sleepy-identity "Mr. Fantastic") ;returns Mr.Fantastic after one second - first call
+(sleepy-identity "Mr. Fantastic") ;returns Mr.Fantastic after one second - second call - even though its the same input and same output
+
+(def memo-sleepy-identity (memoize sleepy-identity))
+(memo-sleepy-identity "Mr. Fantastic") ;returns Mr. Fantastic after one second - first call
+(memo-sleepy-identity "Mr. Fantastic") ; returns Mr. Fantastic immediately - second call
+
+;;memoize is useful for functions that are computationally intensive or that make network requests - any subsequent calls will not bear the cost
 
 
 
