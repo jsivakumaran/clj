@@ -936,6 +936,12 @@ failed-protoganist-names ;calling the function defined above
 ;;memoize is useful for functions that are computationally intensive or that make network requests - any subsequent calls will not bear the cost
 
 ;;Peg Thing
+(ns pegthing.core
+  (require [clojure.set :as set])
+  (:gen-class))
+
+(declare succesfull-move prompt-move game-over query-rows)  ;;this allows you to use refer to these functions before they're defined
+
 
 
 
