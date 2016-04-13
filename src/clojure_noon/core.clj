@@ -1004,3 +1004,46 @@ failed-protoganist-names ;calling the function defined above
 
 (connect {} 15 1 2 4)
 
+(defn connect-right
+  [board max-pos pos]
+  (let [neighbor (inc pos)
+        destination (inc neighbor)]
+    (if-not (or (triangular? neighbor) (triangular? pos))
+      (connect board max-pos pos neighbor destination)
+      board)))
+
+(defn connect-down-left
+  [board max-pos pos]
+  (let [row (row-num pos)
+        neighbor (+ row pos)
+        destination (+ 1 row neighbor)]
+    (connect board max-pos pos neighbor destination)))
+
+(defn connect-down-right
+  [board max-pos pos]
+  (let [row (row-num pos)
+        neighbor (+ 1 row pos)
+        destination (+ 2 row neighbor)]
+    (connect board max-pos pos neighbor destination)))
+
+(defn add-pos
+  "Pegs the position and performs the connections"
+  [board max-pos pos]
+  (let [pegged-board (assoc-in board [pos :pegged] true)]
+    (reduce (fn [new-board connection-creation-fn]
+              (connection-creation-fn new-board max-pos pos))
+            pegged-board
+            [connect-right connect-down-left connect-down-right])))
+
+(add-pos {} 15 1)
+
+
+(defn new-board
+  "Creates a new board with the given number of rows"
+  [rows]
+  (let [initial-board {:rows rows}
+        max-pos (row-tri rows)]
+    reduce (fn [board pos] (add-pos board max-pos pos))
+    initial-board
+    (range 1 (inc max-pos))))
+
